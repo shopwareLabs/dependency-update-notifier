@@ -19,6 +19,7 @@ jobs:
       - name: Cache
         uses: actions/cache@v4
         with:
+          key: composer-lock
           path: composer.lock
           save-always: true
 
