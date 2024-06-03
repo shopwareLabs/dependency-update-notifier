@@ -1,0 +1,27 @@
+name: Dependency Update Check
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: shopware/shopware
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: composer.lock
+          save-always: true
+
+      - name: Install dependencies
+        run: composer install
+      
