@@ -8,6 +8,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Copy script
+        run: cp diff.mjs /tmp/
+
+      - uses: actions/checkout@v4
         with:
           repository: shopware/shopware
 
@@ -17,12 +22,23 @@ jobs:
           php-version: '8.3'
 
       - name: Cache
+        id: cache
         uses: actions/cache@v4
         with:
           key: composer-lock
           path: composer.lock
           save-always: true
 
+      - name: Rename lock
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: mv composer.lock old.lock
+
       - name: Install dependencies
         run: composer install
+
+      - name: Show diff
+        if: steps.cache.outputs.cache-hit == 'true'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node /tmp/diff.mjs
       
