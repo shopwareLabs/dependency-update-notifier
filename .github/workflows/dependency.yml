@@ -27,7 +27,8 @@ jobs:
         id: cache
         uses: actions/cache@v4
         with:
-          key: composer-lock
+          key: composer-lock-${{ github.run_id }}
+          restore-keys: composer-lock
           path: composer.lock
           save-always: true
 
